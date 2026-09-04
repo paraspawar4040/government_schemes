@@ -1,0 +1,10 @@
+venv/
+env/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+data/training_pairs.csv
+.DS_Store
+.vscode/
+.idea/
