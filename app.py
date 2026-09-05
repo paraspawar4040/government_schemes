@@ -32,6 +32,19 @@ st.markdown("""
 
 html, body, [class*="css"]  { font-family: 'Poppins', sans-serif; }
 
+body {
+    background-color: #eee8f8 !important;
+}
+
+.stApp {
+    background-color: #eee8f8 !important;
+}
+
+/* ---------- Soft page background ---------- */
+.stApp {
+    background: #f7f5fb;
+}
+
 /* ---------- Animations ---------- */
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(18px); }

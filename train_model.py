@@ -26,10 +26,11 @@ SCHEMES_PATH = "data/schemes.csv"
 
 def main():
     schemes = pd.read_csv(SCHEMES_PATH)
-    states = sorted(schemes.loc[schemes.level == "State", "state"].unique().tolist()) + ["All India"]
+    state_values = schemes.loc[schemes.level == "State", "state"].dropna().astype(str).unique().tolist()
+    states = sorted(state_values) + ["All India"]
 
     print("Generating synthetic citizen population...")
-    citizens = generate_citizens(400, states, seed=7)
+    citizens = generate_citizens(150, states, seed=7)
     pairs = build_training_pairs(citizens, schemes)
     print(f"Training pairs: {len(pairs)} | eligible rate: {pairs.eligible.mean():.3f}")
 
@@ -45,9 +46,9 @@ def main():
     models = {
         "Logistic Regression": LogisticRegression(max_iter=500),
         "Decision Tree": DecisionTreeClassifier(max_depth=10, random_state=42),
-        "KNN": KNeighborsClassifier(n_neighbors=7),
+        "KNN": KNeighborsClassifier(n_neighbors=7, n_jobs=-1),
         "Gradient Boosting": GradientBoostingClassifier(random_state=42),
-        "Random Forest": RandomForestClassifier(n_estimators=200, max_depth=14, random_state=42),
+        "Random Forest": RandomForestClassifier(n_estimators=200, max_depth=14, random_state=42, n_jobs=-1),
     }
 
     metrics = {}
@@ -74,7 +75,7 @@ def main():
     yr = y_reg_full[elig_mask]
     Xr_train, Xr_test, yr_train, yr_test = train_test_split(Xr, yr, test_size=0.2, random_state=42)
 
-    reg = RandomForestRegressor(n_estimators=200, max_depth=12, random_state=42)
+    reg = RandomForestRegressor(n_estimators=200, max_depth=12, random_state=42, n_jobs=-1)
     reg.fit(Xr_train, yr_train)
     reg_preds = reg.predict(Xr_test)
     r2 = r2_score(yr_test, reg_preds)
